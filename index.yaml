@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  myrepo2:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-03-02T09:33:32.300772+08:00"
+    description: My another chart
+    digest: b5db733769da5e9c5b91c1b8fea552178b9e1843a41036b281396a3ce825b59c
+    name: myrepo2
+    type: application
+    urls:
+    - myrepo2-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-03-02T09:33:32.300185+08:00"
