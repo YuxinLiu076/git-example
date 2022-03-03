@@ -38,6 +38,11 @@ workflows:
     jobs:
       - styra-policy-check
 
+executors:
+  cli:
+    docker:
+      - image: styra/cli
+
 commands:
   policy-check:
     description: Configures and runs the Styra cli
