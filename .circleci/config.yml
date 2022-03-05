@@ -4,6 +4,7 @@ version: 2.1
 
 orbs:
   cli: styra/cli@0.0.7
+  snyk: snyk/snyk@1.1.2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -20,13 +21,6 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!!"
-  styra-policy-check:
-    executor: cli
-    steps:
-      - checkout
-      - policy-check:
-          api_token: STYRA_TOKEN
-          tenant: STYRA_TENANT
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -34,34 +28,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-  check-workflow:
-    jobs:
-      - styra-policy-check
-
-executors:
-  cli:
-    docker:
-      - image: styra/cli
-
-commands:
-  policy-check:
-    description: Configures and runs the Styra cli
-    parameters:
-      api_token:
-        description: STYRA_TOKEN
-        type: env_var_name
-      tenant:
-        description: STYRA_TENANT
-        type: env_var_name
-    steps:
-      - run: styra-cli configure -i ${<< parameters.tenant >>} -t ${<< parameters.api_token >>}
-      - run: |
-          mkdir test
-          styra-cli validate check-local -r . -o test/results.json
-      - run:
-          when: on_fail
-          command: cat test/results.json
-      - store_test_results:
-          path: test
-      - store_artifacts:
-          path: test
+      - snyk/scan-iac
