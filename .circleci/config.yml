@@ -5,6 +5,7 @@ version: 2.1
 orbs:
   cli: styra/cli@0.0.7
   snyk: snyk/snyk@1.1.2
+  terraform: circleci/terraform@3.0.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -21,6 +22,23 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!!"
+  single-job-lifecycle:
+    executor: terraform/default
+    steps:
+      - checkout
+      - terraform/init:
+          path: .
+      - terraform/validate:
+          path: .
+      - terraform/fmt:
+          path: .
+      - terraform/plan:
+          path: .
+      - terraform/apply:
+          path: .
+      - terraform/destroy:
+          path: .
+    working_directory: ~/src
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -28,4 +46,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-      - snyk/scan-iac
+      - single-job-lifecycle
